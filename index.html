@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz de Tutoría - Estilo God of War</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+        :root {
+            --primary-gold: #d4af37;
+            --secondary-gold: #ffd700;
+            --deep-blue: #003366;
+            --light-blue: #87CEEB;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: var(--primary-gold);
+            min-height: 100vh;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" x="50" fill="rgba(212,175,55,0.1)" font-size="100" text-anchor="middle" dominant-baseline="middle">Ω</text></svg>');
+            background-size: 200px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .welcome-screen, .quiz-container, .result-screen {
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--primary-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            display: none;
+            box-shadow: 0 0 20px rgba(212,175,55,0.3);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px rgba(212,175,55,0.3);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(212,175,55,0.5);
+            }
+        }
+
+        .welcome-screen {
+            display: block;
+            text-align: center;
+        }
+
+        .certificate {
+            display: none;
+            background: white;
+            padding: 40px;
+            margin: 20px auto;
+            position: relative;
+            max-width: 800px;
+            aspect-ratio: 1.414/1;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--deep-blue);
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+        }
+
+        .certificate::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--deep-blue);
+            clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .gold-ribbon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 150px;
+            background: var(--primary-gold);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+        }
+
+        .certificate-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            text-align: center;
+            color: var(--deep-blue);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .certificate-title {
+            font-size: 3em;
+            color: var(--deep-blue);
+            margin: 40px 0 20px;
+            font-weight: 700;
+        }
+
+        .certificate-subtitle {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+        }
+
+        .recipient-name {
+            font-size: 2em;
+            margin: 20px 0;
+            border-bottom: 2px solid var(--deep-blue);
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        .certificate-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 40px 0;
+            padding: 0 40px;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 60px;
+        }
+
+        .signature {
+            text-align: center;
+        }
+
+        .signature img {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+
+        .signature-name {
+            font-size: 1.2em;
+            border-top: 2px solid var(--deep-blue);
+            padding-top: 10px;
+        }
+
+        .logo {
+            width: 100px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            color: var(--primary-gold);
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        input[type="text"] {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--primary-gold);
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.2em;
+            width: 80%;
+            margin: 20px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(212,175,55,0.5);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            border: none;
+            color: black;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 4px solid var(--primary-gold);
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px;
+            border: 2px solid var(--primary-gold);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .option:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateX(10px);
+        }
+
+        .option::before {
+            content: '⚔️';
+            position: absolute;
+            left: -30px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover::before {
+            opacity: 1;
+            left: 10px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -200%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            to {
+                left: 200%;
+            }
+        }
+
+        /* Efectos especiales */
+        .fire-effect {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(0deg, rgba(255,69,0,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .certificate, .certificate * {
+                visibility: visible;
+            }
+            .certificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-screen">
+            <h1>Quiz de Tutoría</h1>
+            <input type="text" id="userName" placeholder="Ingresa tu nombre completo">
+            <button onclick="startQuiz()">Comenzar</button>
+        </div>
+
+        <div class="quiz-container">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="question"></div>
+            <div class="options"></div>
+        </div>
+
+        <div class="result-screen">
+            <h2>Resultados</h2>
+            <div id="score"></div>
+            <button onclick="showCertificate()">Ver Certificado</button>
+        </div>
+
+        <div class="certificate">
+            <div class="gold-ribbon"></div>
+            <div class="certificate-content">
+                <h2 class="certificate-title">Certificado</h2>
+                <h3 class="certificate-subtitle">DE RECONOCIMIENTO A:</h3>
+                <div class="recipient-name" id="certificateName"></div>
+                <p class="certificate-text">
+                    Por haber concluido de manera satisfactoria el curso de "Formación y Desarrollo de Tutoría para los Colaboradores", impartido por PsicoInnovaTe, empresa especializada en recursos humanos.
+                </p>
+                <div class="signature-section">
+                    <div class="signature">
+                        <div class="signature-name">Naydeth Prieto</div>
+                        <div class="signature-title">Propietaria</div>
+                    </div>
+                    <div class="logo">
+                        <img src="/img/LogoPsisco.jpg" alt="Logo PsicoInnova" class="logo-img" style="width: 80%; height: 80%; object-fit: cover;">
+                    </div>
+                    <div class="signature">
+                        <div class="signature-name">Brisa Meza</div>
+                        <div class="signature-title">Coo-propietaria</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const questions = [
+    {
+        question: "¿Qué es el desarrollo profesional?",
+        options: [
+            "Un proceso de evaluación de productos.",
+            "La mejora continua de habilidades y conocimientos.",
+            "La asignación de tareas diarias.",
+            "La planificación de vacaciones."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Cuál es un objetivo clave de la tutoría en las organizaciones?",
+        options: [
+            "Aumentar la carga de trabajo.",
+            "Reducir la comunicación entre colaboradores.",
+            "Facilitar el crecimiento profesional.",
+            "Evitar el desarrollo de habilidades."
+        ],
+        correct: 2
+    },
+    {
+        question: "¿Qué herramienta es útil para la tutoría virtual?",
+        options: [
+            "Hojas de papel.",
+            "Plataformas como Zoom o Teams.",
+            "Teléfonos fijos sin internet.",
+            "Computadoras sin acceso a software."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué característica define a un buen mentor?",
+        options: [
+            "Escucha activa y empatía.",
+            "Ignorar las preocupaciones del aprendiz.",
+            "Impartir órdenes sin justificación.",
+            "Enfocarse solo en sus propios logros."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Qué es un plan de desarrollo individual (PDI)?",
+        options: [
+            "Un documento que asigna tareas sin supervisión.",
+            "Una estrategia personalizada para el crecimiento profesional.",
+            "Un sistema de control financiero.",
+            "Una lista de compras de la organización."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué elemento es esencial para una relación de tutoría exitosa?",
+        options: [
+            "Comunicación efectiva.",
+            "Evitar establecer metas claras.",
+            "Reuniones poco frecuentes.",
+            "Ignorar el progreso del aprendiz."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Cuál de las siguientes NO es una plataforma para el desarrollo profesional?",
+        options: [
+            "LinkedIn Learning.",
+            "Coursera.",
+            "YouTube Educativo.",
+            "Redes sociales de entretenimiento."
+        ],
+        correct: 3
+    },
+    {
+        question: "¿Qué aspecto fomenta una buena cultura de tutoría en el trabajo?",
+        options: [
+            "Competencia desleal entre colaboradores.",
+            "Promoción del aprendizaje continuo.",
+            "Ignorar las necesidades de los equipos.",
+            "Aislar a los aprendices de sus tutores."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué es el feedback constructivo?",
+        options: [
+            "Críticas sin justificación.",
+            "Opiniones que ayudan al desarrollo del aprendiz.",
+            "Ignorar las áreas de mejora.",
+            "Solo enfocarse en los errores."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué papel tiene el mentor en el proceso de tutoría?",
+        options: [
+            "Supervisar sin involucrarse.",
+            "Brindar orientación y apoyo.",
+            "Ignorar las dudas del aprendiz.",
+            "Resolver todos los problemas del aprendiz."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Cuál de las siguientes es una estrategia para implementar programas de tutoría?",
+        options: [
+            "Establecer objetivos claros desde el principio.",
+            "Evitar la planificación de las sesiones.",
+            "Designar mentores sin experiencia.",
+            "Ignorar el seguimiento del programa."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Qué tipo de relación se busca en una tutoría efectiva?",
+        options: [
+            "Jerárquica y autoritaria.",
+            "De confianza y colaboración.",
+            "Distante y formal.",
+            "Competitiva y rígida."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué habilidad clave debe tener un mentor?",
+        options: [
+            "Habilidad para juzgar.",
+            "Capacidad de empatizar.",
+            "Ignorar las emociones del aprendiz.",
+            "Preferencia por trabajar solo."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué se debe hacer durante las sesiones de tutoría?",
+        options: [
+            "Establecer metas específicas.",
+            "Criticar sin ofrecer soluciones.",
+            "Hablar solo de temas personales.",
+            "Cancelar reuniones sin previo aviso."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Qué acción es fundamental al monitorear el progreso de un aprendiz?",
+        options: [
+            "Registrar avances y retroalimentación.",
+            "Evitar evaluaciones periódicas.",
+            "No prestar atención al desarrollo.",
+            "Dejar que el aprendiz trabaje sin guía."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Cuál es una ventaja de las tutorías para los colaboradores?",
+        options: [
+            "Estancamiento profesional.",
+            "Desarrollo de nuevas habilidades.",
+            "Incremento en el estrés laboral.",
+            "Desmotivación en el trabajo."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué significa 'monitoreo' en el desarrollo de tutorías?",
+        options: [
+            "Controlar cada movimiento del aprendiz.",
+            "Evaluar el progreso de manera constante.",
+            "Evitar reuniones de retroalimentación.",
+            "No dar seguimiento a las metas."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Cuál es una herramienta útil para establecer metas en la tutoría?",
+        options: [
+            "Método SMART.",
+            "Correo electrónico sin seguimiento.",
+            "Comunicación vaga y abierta.",
+            "Registro en papel sin estructura."
+        ],
+        correct: 0
+    },
+    {
+        question: "¿Qué debe evitarse en una relación de tutoría?",
+        options: [
+            "Escucha activa.",
+            "Relaciones autoritarias.",
+            "Retroalimentación constante.",
+            "Establecimiento de objetivos claros."
+        ],
+        correct: 1
+    },
+    {
+        question: "¿Qué promueve un programa de tutoría bien estructurado?",
+        options: [
+            "La desmotivación entre los colaboradores.",
+            "La retención de talento y el desarrollo profesional.",
+            "La resistencia al cambio organizacional.",
+            "La falta de interés en el aprendizaje."
+        ],
+        correct: 1
+    }
+];
+
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userName = "";
+
+        function startQuiz() {
+            userName = document.getElementById("userName").value.trim();
+            if (!userName) {
+                alert("Por favor ingresa tu nombre");
+                return;
+            }
+            document.querySelector(".welcome-screen").style.display = "none";
+            document.querySelector(".quiz-container").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const questionData = questions[currentQuestion];
+            document.querySelector(".question").textContent = `${currentQuestion + 1}. ${questionData.question}`;
+            
+            const optionsHtml = questionData.options.map((option, index) => 
+                `<div class="option" onclick="selectOption(${index})">${option}</div>`
+            ).join("");
+            
+            document.querySelector(".options").innerHTML = optionsHtml;
+            updateProgress();
+        }
+
+        function selectOption(optionIndex) {
+            if (optionIndex === questions[currentQuestion].correct) {
+                score++;
+            }
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.querySelector(".progress").style.width = `${progress}%`;
+        }
+
+        function showResults() {
+            document.querySelector(".quiz-container").style.display = "none";
+            document.querySelector(".result-screen").style.display = "block";
+            
+            const percentage = (score / questions.length) * 100;
+            const passed = percentage >= 70;
+            
+            document.getElementById("score").innerHTML = `
+                <h3>Puntuación: ${percentage.toFixed(1)}%</h3>
+                <p>${passed ? "¡Felicitaciones! Has aprobado el curso." : "No has alcanzado el puntaje mínimo requerido."}</p>
+            `;
+        }
+
+        function showCertificate() {
+            const percentage = (score / questions.length) * 100;
+            if (percentage >= 70) {
+                document.querySelector(".result-screen").style.display = "none";
+                document.querySelector(".certificate").style.display = "block";
+                document.getElementById("certificateName").textContent = userName;
+            } else {
+                alert("Se requiere un mínimo de 70% para obtener el certificado");
+            }
+        }
+    </script>
+</head>
+</body>
+</html>
